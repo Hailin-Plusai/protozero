@@ -38,7 +38,7 @@ else()
     endif()
 endif()
 
-include_directories("${CMAKE_SOURCE_DIR}/include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(PROTOZERO_DATA_VIEW "" CACHE STRING "Type used for protozero::data_view")
 if(NOT PROTOZERO_DATA_VIEW STREQUAL "")
@@ -67,12 +67,12 @@ if(CLANG_TIDY AND PROTOBUF_FOUND)
     message(STATUS "Looking for clang-tidy - found ${CLANG_TIDY}")
     add_custom_target(clang-tidy
         ${CLANG_TIDY}
-        -p ${CMAKE_BINARY_DIR}
-        ${CMAKE_SOURCE_DIR}/test/*.cpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/reader_test_cases.cpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
-        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
-        ${CMAKE_SOURCE_DIR}/tools/*.cpp
+        -p ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/t/*/reader_test_cases.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/unit/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.cpp
     )
     if(BUILD_TESTING)
         add_dependencies(clang-tidy writer_tests)
@@ -96,12 +96,13 @@ if(CPPCHECK)
     add_custom_target(cppcheck
         ${CPPCHECK}
         -Uassert --std=c++11 --enable=all
-        ${CMAKE_SOURCE_DIR}/include/protozero/*.hpp
-        ${CMAKE_SOURCE_DIR}/test/*.cpp
-        ${CMAKE_SOURCE_DIR}/test/include/*.hpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/*.cpp
-        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
-        ${CMAKE_SOURCE_DIR}/tools/*.cpp
+        -p ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/protozero/*.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/include/*.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/t/*/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/unit/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.cpp
     )
 else()
     message(STATUS "Looking for cppcheck - not found")
@@ -120,7 +121,7 @@ find_program(IWYU_TOOL NAMES iwyu_tool)
 if(IWYU_TOOL)
     message(STATUS "Looking for iwyu - found")
     add_custom_target(iwyu
-        ${IWYU_TOOL} -p ${CMAKE_BINARY_DIR}
+        ${IWYU_TOOL} -p ${CMAKE_CURRENT_BINARY_DIR}
     )
 else()
     message(STATUS "Looking for iwyu - not found")
